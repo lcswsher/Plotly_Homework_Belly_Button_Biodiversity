@@ -1,3 +1,14 @@
+// Plotly Homework - Belly Button Biodiversity
+// 
+// In git bash type: 
+// 1) python -m http.server 8000 --bind 127.0.0.1
+//      (after typing in the above - git bash will be idle.) 
+// 
+// 2) Go to Chrome and use server http://127.0.0.1:8000/ to view the dash board:
+// 
+// (note: index.html console.log does not load the samples.json properly due to the CORS restriction - file error indicats - 
+//      URL scheme "samples.json - file" is not supported and must be an http").
+// 
 function metadataSample(sample) {
     d3.json("samples.json").then((data) => {
         var metadata = data.metadata;
@@ -12,10 +23,7 @@ function metadataSample(sample) {
     });
 }
 
-// // console.log(samples.json)
-
-
-function buildCharts(sample) {
+function Charts(sample) {
 
 
     d3.json("samples.json").then((data) => {
@@ -86,15 +94,15 @@ function init() {
         });
 
         const firstSample = sampleNames[0];
-        buildCharts(firstSample);
-        buildMetadata(firstSample);
+        Charts(firstSample);
+        metadataSample(firstSample);
     });
 
 }
 
 function optionChanged(newSample) {
-    buildCharts(newSample);
-    buildMetadata(newSample);
+    Charts(newSample);
+    metadataSample(newSample);
 }
 
 init();
