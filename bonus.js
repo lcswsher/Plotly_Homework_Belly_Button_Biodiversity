@@ -1,6 +1,6 @@
 // Plotly Homework - Belly Button Biodiversity
 // 
-// In git bash copy/paste the following (in git bash):
+// In git bash type: 
 // 1) python -m http.server 8000 --bind 127.0.0.1
 //      (after typing in the above - git bash will be idle.) 
 // 
@@ -23,6 +23,43 @@ function metadataSample(sample) {
         });
     });
 }
+
+// gauge chart
+
+function createGuage(sample) {
+
+    // console.log("sample", sample);
+
+    d3.json("samples.json").then(data => {
+        var item = data.metadata;
+        var itemMatched = item.filter(itemData => 
+            itemData["id"] === parseInt(sample));
+
+        gaugeChart(itemMatched[0]);
+        }
+    )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Horizontal Bar and Bubble Charts  
 function Charts(sample) {
@@ -73,7 +110,7 @@ function Charts(sample) {
 
         var barLayout = {
             title: "Top 10 Bacteria Cultures",
-            margin: {t: 40, l:150}
+            margin: { t: 40, l: 150 }
         };
 
         Plotly.newPlot("bar", bar_data, barLayout);
