@@ -9,6 +9,7 @@
 // (note: index.html console.log does not load the samples.json properly due to the CORS restriction - file error indicats - 
 //      URL scheme "samples.json - file" is not supported and must be an http").
 // 
+// Demographic Info Chart - MetaData (id, ethnicity, gender, age, location, bbtype, wfreq) is displayed for a selected subject id
 function metadataSample(sample) {
     d3.json("samples.json").then((data) => {
         var metadata = data.metadata;
@@ -23,26 +24,27 @@ function metadataSample(sample) {
     });
 }
 
+// Horizontal Bar and Bubble Charts  
 function Charts(sample) {
 
-
+    // bubble chart
     d3.json("samples.json").then((data) => {
-        let samples = data.samples;
-        let resultsarray = samples.filter(sampleobject =>
+        var samples = data.samples;
+        var resultsarray = samples.filter(sampleobject =>
             sampleobject.id == sample);
-        let result = resultsarray[0]
+        var result = resultsarray[0]
 
-        let ids = result.otu_ids;
-        let labels = result.otu_labels;
-        let values = result.sample_values;
+        var ids = result.otu_ids;
+        var labels = result.otu_labels;
+        var values = result.sample_values;
 
-        let layoutBubble = {
+        var layoutBubble = {
             margin: { t: 0 },
             xaxis: { title: "OTU ID" },
             hovermode: "closest"
         };
 
-        let dataBubble = [
+        var dataBubble = [
             {
                 x: ids,
                 y: values,
@@ -57,6 +59,7 @@ function Charts(sample) {
 
         Plotly.newPlot("bubble", dataBubble, layoutBubble);
 
+        // bar chart
         var bar_data = [
             {
                 y: ids.slice(0, 10).map(otuID => `OTU ${otuID}  `).reverse(),
@@ -78,22 +81,22 @@ function Charts(sample) {
 
 }
 
-// }
+//to extract the "names": from the samples json file in ID selDataset
 
 function init() {
 
     var selector = d3.select("#selDataset");
 
     d3.json("samples.json").then((data) => {
-        var sampleNames = data.names;
-        sampleNames.forEach((sample) => {
+        var sample_data_Names = data.names;
+        sample_data_Names.forEach((sample) => {
             selector
                 .append("option")
                 .text(sample)
                 .property("value", sample);
         });
 
-        const firstSample = sampleNames[0];
+        const firstSample = sample_data_Names[0];
         Charts(firstSample);
         metadataSample(firstSample);
     });
