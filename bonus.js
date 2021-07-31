@@ -40,27 +40,50 @@ function createGuage(sample) {
     )
 }
 
+function gaugeChart(data) {
+    console.log("gaugeChart",data)
+
+    if(data.wfreq === null){
+        data.wfreq = 0;
+    }
+
+    let degree = parseInt(data.wfreq) * (180/10);
+
+    var degrees = 180 - degree;
+    var radius = 0.5;
+    var radians = degrees * Math.Pi / 180;
+    var x = radius * Math.cos(radians);
+    var y = radius * Math.sin(radians);
+
+    var mainPath = "M-.0 -0.5L .0 0.05 L";
+    var pathX = String(x);
+    var space = " ";
+    var pathY = String(y);
+    var pathEnd = " Z";
+    var path = mainPath.concat(pathX, space, pathY, pathEnd);
+
+    console.log(path);
+
+    var trace = [
+        { 
+            type: "scatter", 
+            x:[0],
+            Y:[0],
+            marker: {size: 25, color: '2F6497'},
+            showlegend: false,
+            text: data.wfreq,
+            name: "Wash Frequency",
+            hoverinfo: "text+name"},
+            {values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 9],
+            
+            }
+
+    
+    ]
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 // Horizontal Bar and Bubble Charts  
 function Charts(sample) {
 
