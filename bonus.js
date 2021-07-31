@@ -1,6 +1,6 @@
 // Plotly Homework - Belly Button Biodiversity
 // 
-// In git bash type: 
+// In git bash copy/paste the following (in git bash):
 // 1) python -m http.server 8000 --bind 127.0.0.1
 //      (after typing in the above - git bash will be idle.) 
 // 
@@ -10,6 +10,10 @@
 //      URL scheme "samples.json - file" is not supported and must be an http").
 // 
 // Demographic Info Chart - MetaData (id, ethnicity, gender, age, location, bbtype, wfreq) is displayed for a selected subject id
+
+// Color palette for Gauge Chart
+var arrColorsG = ["#5899DA", "#E8743B", "#19A979", "#ED4A7B", "#945ECF", "#13A4B4", "#525DF4", "#BF399E", "#6C8893", "white"];
+
 function metadataSample(sample) {
     d3.json("samples.json").then((data) => {
         var metadata = data.metadata;
@@ -24,83 +28,99 @@ function metadataSample(sample) {
     });
 }
 
-// gauge chart
-
-function createGuage(sample) {
-
-    // console.log("sample", sample);
+function buildGaugeChart(sample) {
+    console.log("sample", sample);
 
     d3.json("samples.json").then(data => {
-        var item = data.metadata;
-        var itemMatched = item.filter(itemData => 
-            itemData["id"] === parseInt(sample));
 
-        gaugeChart(itemMatched[0]);
-        }
-    )
+        var objs = data.metadata;
+        //console.log("objs", objs);
+
+        var matchedSampleObj = objs.filter(sampleData =>
+            sampleData["id"] === parseInt(sample));
+        //console.log("buildGaugeChart matchedSampleObj", matchedSampleObj);
+
+        gaugeChart(matchedSampleObj[0]);
+    });
 }
 
 function gaugeChart(data) {
-    console.log("gaugeChart",data)
+    console.log("gaugeChart", data);
 
-    if(data.wfreq === null){
+    if (data.wfreq === null) {
         data.wfreq = 0;
+
     }
 
-    let degree = parseInt(data.wfreq) * (180/10);
+    let degree = parseInt(data.wfreq) * (180 / 10);
 
-    var degrees = 180 - degree;
-    var radius = 0.5;
-    var radians = degrees * Math.Pi / 180;
-    var x = radius * Math.cos(radians);
-    var y = radius * Math.sin(radians);
+    // Trig to calc meter point
+    let degrees = 180 - degree;
+    let radius = .5;
+    let radians = degrees * Math.PI / 180;
+    let x = radius * Math.cos(radians);
+    let y = radius * Math.sin(radians);
 
-    var mainPath = "M-.0 -0.5L .0 0.05 L";
-    var pathX = String(x);
-    var space = " ";
-    var pathY = String(y);
-    var pathEnd = " Z";
-    var path = mainPath.concat(pathX, space, pathY, pathEnd);
+    let mainPath = 'M -.0 -0.025 L .0 0.025 L ',
+        pathX = String(x),
+        space = ' ',
+        pathY = String(y),
+        pathEnd = ' Z';
+    let path = mainPath.concat(pathX, space, pathY, pathEnd);
 
-    console.log(path);
+    let trace = [{
+        type: 'scatter',
+        x: [0], y: [0],
+        marker: { size: 50, color: '2F6497' },
+        showlegend: false,
+        name: 'WASH FREQ',
+        text: data.wfreq,
+        hoverinfo: 'text+name'
+    },
+    {
+        values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 9],
+        rotation: 90,
+        text: ['8-9', '7-8', '6-7', '5-6', '4-5', '3-4', '2-3', '1-2', '0-1', ''],
+        textinfo: 'text',
+        textposition: 'inside',
+        textfont: {
+            size: 16,
+        },
+        marker: { colors: [...arrColorsG] },
+        labels: ['8-9', '7-8', '6-7', '5-6', '4-5', '3-4', '2-3', '2-1', '0-1', ''],
+        hoverinfo: 'text',
+        hole: .5,
+        type: 'pie',
+        showlegend: false
+    }];
 
-    var trace = [
-        { 
-            type: "scatter", 
-            x:[0],
-            Y:[0],
-            marker: {size: 25, color: '2F6497'},
-            showlegend: false,
-            text: data.wfreq,
-            name: "Wash Frequency",
-            hoverinfo: "text+name"},
-            {values: [1, 1, 1, 1, 1, 1, 1, 1, 1, 9],
-            rotation: 90,
-            text: ['8-9', '7-8', '6-7', '5-6', '4-5', '3-4', '2-3', '1-2, 0-1', ' '],
-            hoverinfo: 'text',
-            hole: .5,
-            type: 'pie',
-            showlegend: false
-        }
-   ];
+    let layout = {
+        shapes: [{
+            type: 'path',
+            path: path,
+            fillcolor: '#2F6497',
+            line: {
+                color: '#2F6497'
+            }
+        }],
 
-   let layout = { 
-       shapes:[{
-           type: 'path',
-           path: path,
-           fillcolor: '#2f6497',
-           line: {
-               color: '#2f6497'
-           }
-       }],
-  }
+        title: '<b>Belly Button Washing Frequency</b> <br> <b>Scrub Per Week</b>',
+        height: 550,
+        width: 550,
+        xaxis: {
+            zeroline: false, showticklabels: false,
+            showgrid: false, range: [-1, 1]
+        },
+        yaxis: {
+            zeroline: false, showticklabels: false,
+            showgrid: false, range: [-1, 1]
+        },
+    };
+
+    Plotly.newPlot('gauge', trace, layout, { responsive: true });
+
 }
 
-
-
-
-
-}
 // Horizontal Bar and Bubble Charts  
 function Charts(sample) {
 
@@ -176,6 +196,8 @@ function init() {
         const firstSample = sample_data_Names[0];
         Charts(firstSample);
         metadataSample(firstSample);
+        buildGaugeChart(firstSample)
+
     });
 
 }
@@ -183,6 +205,7 @@ function init() {
 function optionChanged(newSample) {
     Charts(newSample);
     metadataSample(newSample);
+    buildGaugeChart(newSample)
 }
 
 init();
