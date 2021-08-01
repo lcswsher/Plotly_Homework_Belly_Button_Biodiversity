@@ -10,4 +10,4 @@
   -  (note: index.html console.log does not load the samples.json properly due to the CORS restriction - file error indicates -  URL scheme "samples.json - file " is not supported and must be an http".
 
 
-
+![ ](images/Dashboard.png)
