@@ -9,5 +9,4 @@
   -  2) Go to Chrome and use server http://127.0.0.1:8000/ to view the dash board:
   -  (note: index.html console.log does not load the samples.json properly due to the CORS restriction - file error indicates -  URL scheme "samples.json - file " is not supported and must be an http".
 
-
-![ ](Images/Dashboard.png)
+<img src="Images/Dashboard.png" height="950">
